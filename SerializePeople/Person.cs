@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SerializePeople
 {
     [Serializable]
     public class Person
     {
-        public string Name { get; }
-        public DateTime BirthDate { get; }
-        public Genders Gender { get; }
-        public int Age { get; private set; }
+        private static string FileName = "Person.bin";
+        public string Name { get; set; }
+        public DateTime BirthDate { get; set; }
+        public Genders Gender { get; set; }
+        public int Age { get; set; }
 
         public enum Genders
         {
@@ -39,6 +42,14 @@ namespace SerializePeople
             }
 
             return age;
+        }
+
+        public void Serialize(string output)
+        {
+            Stream stream = new FileStream(FileName,FileMode.Create, FileAccess.Write,FileShare.None);
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(stream,this);
+            stream.Close();
         }
 
         public override string ToString()
