@@ -21,7 +21,6 @@ namespace SerializePeople.Tests
             Assert.AreEqual(birthDate,person.BirthDate);
             Assert.AreEqual(Person.Genders.Male,person.Gender);
             Assert.AreEqual(20,person.Age);
-            
         }
 
         [Test]
