@@ -24,6 +24,10 @@ namespace SerializePeople
             Female
         }
 
+        public Person()
+        {
+        }
+
         public Person(string name, DateTime birthDate, Genders gender)
         {
             Name = name;
@@ -50,6 +54,16 @@ namespace SerializePeople
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream,this);
             stream.Close();
+        }
+
+        public static Person Deserialize()
+        {
+            Person person = new Person();
+            Stream stream = new FileStream(FileName, FileMode.Open);
+            BinaryFormatter formatter = new BinaryFormatter();
+            person = (Person)formatter.Deserialize(stream);
+            stream.Close();
+            return person;
         }
 
         public override string ToString()
