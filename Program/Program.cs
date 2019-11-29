@@ -11,7 +11,7 @@ namespace Program
     {
         static void Main(string[] args)
         {
-            Person person = new Person("John", new DateTime(1996, 01, 02), Person.Genders.Male);
+            Person person = new Person("Johnn", new DateTime(1997, 01, 02), Person.Genders.Male);
             person.Serialize("");
             Console.WriteLine(person);
             person = null;

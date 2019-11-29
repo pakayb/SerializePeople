@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
@@ -10,13 +11,14 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace SerializePeople
 {
     [Serializable]
-    public class Person
+    public class Person :IDeserializationCallback,ISerializable
     {
         private static string FileName = "Person.bin";
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
         public Genders Gender { get; set; }
-        public int Age { get; set; }
+        [NonSerialized]private int _age;
+        public int Age { get => _age; set => _age = value; }
 
         public enum Genders
         {
@@ -69,6 +71,26 @@ namespace SerializePeople
         public override string ToString()
         {
             return $"Name: {Name} | Gender: {Gender} | Age: {Age}";
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Name", Name);
+            info.AddValue("BirthDate",BirthDate);
+            info.AddValue("Gender",Gender);
+        }
+
+        public Person(SerializationInfo info, StreamingContext context)
+        {
+            Name = info.GetString("Name");
+            BirthDate = info.GetDateTime("BirthDate");
+            Gender = (Genders) info.GetValue("Gender", typeof(Genders));
+            Age = CalculateAge(this.BirthDate);
+        }
+
+        public void OnDeserialization(object sender)
+        {
+            Age = CalculateAge(BirthDate);
         }
     }
 }
